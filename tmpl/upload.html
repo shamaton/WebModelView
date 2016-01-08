@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>MODEL VIEW UPLOADER</title>
+      <meta charset="UTF-8">
+      <script type="text/javascript" src="/static/js/jquery-2.1.4.min.js"></script>
+      <script type="text/javascript" src="/static/js/upload.js"></script>
+    <link type="text/css" rel="stylesheet" href="/static/css/style.css" />
+  </head>
+  <body>
+  <h1>3Dモデルビューワー</h1>
+  <h2>ファイルを選択するか、ドラッグドロップしてください</h2>
+    <div class="container">
+
+      <div id="error"></div>
+
+
+      <div>変換可能なデータ一覧</div>
+      <div id="models">{{.models}}</div>
+
+
+      <div id="target" draggable="true" style="width:500px;background:#ffcccc;border:#ff0000; solid 1px;">
+        <br />
+        <div id="mylist">&nbsp;&nbsp;&nbsp;ここにファイルをまとめてドロップ</div>
+        <br />
+      </div>
+      <div id="progress_bar" style="color:#ffffff;width:0px;background:#0000ff;border-style:none;"></div>
+      <input id="fileselect" type="file" multiple="multiple" style="width:0;height:0 display:none"/>
+      <input type=button value="ファイル選択" onclick="$('#fileselect').click();">
+      <!--<LABEL for="fileselect"><INPUT type=button value=ファイル選択></LABEL> -->
+
+      <input id="cancel" type="button" value="キャンセル">
+      <br>
+      <input id="sendfiles" type="button" value="送信">
+
+      <br>
+      <div id="message"></div>
+      <div id="report"></div>
+
+    </div>
+  </body>
+</html>
