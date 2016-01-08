@@ -86,8 +86,7 @@
             function init_object(){
 
                 var loader1 = new THREE.AssimpJSONLoader();
-                loader1.load( '/static/models/jeep/jeep.assimp.json', function ( object ) {
-                //loader1.load( '/static/models/gopher/gopher.json', function ( object ) {
+                loader1.load( '/static/models/data.json', function ( object ) {
 
                     object.scale.multiplyScalar( 1 );
                     var chara = new THREE.Object3D();
