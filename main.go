@@ -41,6 +41,7 @@ var models = []string{
 }
 
 const TEMPLATE_DIR = "template/"
+const PORT = "8080"
 
 /**************************************************************************************************/
 /*!
@@ -224,9 +225,8 @@ func main() {
 	http.HandleFunc("/view", viewHandler)
 
 	//Listen on port 8080
-	http.ListenAndServe(":8080", nil)
+	http.ListenAndServe(":"+PORT, nil)
 }
-
 
 /**************************************************************************************************/
 /*!
