@@ -41,6 +41,10 @@ var models = []string{
 }
 
 const TEMPLATE_DIR = "template/"
+
+var PRODUCTION = "0"
+var URL = "localhost"
+
 const PORT = "8080"
 
 /**************************************************************************************************/
@@ -157,7 +161,7 @@ func uploadHandler(w http.ResponseWriter, r *http.Request) {
 		}
 
 		// 生成したURLを返す
-		fmt.Fprintf(w, "http://localhost:8080/view?d="+folder)
+		fmt.Fprintf(w, "http://"+URL+"/view?d="+folder)
 
 	default:
 		w.WriteHeader(http.StatusMethodNotAllowed)
@@ -203,6 +207,14 @@ func init() {
 	// ランダムシード
 	rand.Seed(time.Now().UnixNano())
 
+	// 本番か
+	PRODUCTION = os.Getenv("PRODUCTION")
+	if PRODUCTION == "1" {
+		URL = os.Getenv("HOSTNAME")
+	} else {
+		URL = "localhost:" + PORT
+	}
+
 	// uploadsフォルダがなければ作成する
 	checkFolder()
 }
@@ -221,8 +233,8 @@ func main() {
 
 	// handler
 	http.HandleFunc("/upload", uploadHandler)
-	http.HandleFunc("/view_sample", viewSampleHandler)
 	http.HandleFunc("/view", viewHandler)
+	http.HandleFunc("/view_sample", viewSampleHandler)
 
 	//Listen on port 8080
 	http.ListenAndServe(":"+PORT, nil)
