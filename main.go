@@ -2,19 +2,19 @@ package main
 
 import (
 	"bytes"
+	"fmt"
 	"html/template"
 	"io"
 	"io/ioutil"
+	"math/rand"
 	"net/http"
+	"net/url"
 	"os"
 	"os/exec"
 	"path"
 	"strconv"
 	"strings"
 	"time"
-	"fmt"
-	"math/rand"
-	"net/url"
 )
 
 /**
@@ -115,7 +115,6 @@ func uploadHandler(w http.ResponseWriter, r *http.Request) {
 			}
 			dst.Close()
 
-
 			// モデルデータチェック & JSON化
 			if isModelData(fileName) {
 				// 重複は許さない
@@ -147,7 +146,7 @@ func uploadHandler(w http.ResponseWriter, r *http.Request) {
 		}
 
 		// 生成したURLを返す
-		fmt.Fprintf(w, "http://localhost:8080/view?d=" + folder)
+		fmt.Fprintf(w, "http://localhost:8080/view?d="+folder)
 
 	default:
 		w.WriteHeader(http.StatusMethodNotAllowed)
@@ -180,17 +179,22 @@ func viewHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+	// ランダムシード
 	rand.Seed(time.Now().UnixNano())
 
-	fs := http.FileServer(http.Dir("static"))
-	http.Handle("/static/", http.StripPrefix("/static/", fs))
+	// uploadsフォルダがなければ作成する
+	checkFolder()
 
+	// static file handler.
+	static := http.FileServer(http.Dir("static"))
+	uploads := http.FileServer(http.Dir("uploads"))
+	http.Handle("/static/", http.StripPrefix("/static/", static))
+	http.Handle("/uploads/", http.StripPrefix("/uploads/", uploads))
+
+	// handler
 	http.HandleFunc("/upload", uploadHandler)
 	http.HandleFunc("/view_sample", viewSampleHandler)
 	http.HandleFunc("/view", viewHandler)
-
-	//static file handler.
-	http.Handle("/uploads/", http.StripPrefix("/uploads/", http.FileServer(http.Dir("uploads"))))
 
 	//Listen on port 8080
 	http.ListenAndServe(":8080", nil)
@@ -206,6 +210,27 @@ func isModelData(fileName string) bool {
 		}
 	}
 	return false
+}
+
+/**************************************************************************************************/
+/*!
+ *  アップフォルダ確認
+ */
+/**************************************************************************************************/
+func checkFolder() {
+	// ディレクトリ取得
+	dir, err := os.Getwd()
+	if err != nil {
+		panic(err)
+		return
+	}
+
+	// なければ作成
+	uploads := path.Join(dir, "uploads")
+	if err := os.Mkdir(uploads, 0755); err != nil && !os.IsExist(err) {
+		panic(err)
+		return
+	}
 }
 
 func jsonize(folder, fileName string) ([]byte, string) {
