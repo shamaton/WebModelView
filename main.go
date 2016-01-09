@@ -40,10 +40,16 @@ var models = []string{
 	".mtl",
 }
 
-//Display the named template
+const TEMPLATE_DIR = "template/"
+
+/**************************************************************************************************/
+/*!
+ *  テンプレート呼び出し
+ */
+/**************************************************************************************************/
 func display(w http.ResponseWriter, tmpl string, data interface{}) {
-	//Compile templates on start
-	var templates = template.Must(template.ParseFiles("tmpl/upload.html"))
+	html := tmpl + ".html"
+	var templates = template.Must(template.ParseFiles(TEMPLATE_DIR + html))
 	templates.ExecuteTemplate(w, tmpl+".html", data)
 }
 
@@ -163,10 +169,7 @@ func uploadHandler(w http.ResponseWriter, r *http.Request) {
  */
 /**************************************************************************************************/
 func viewSampleHandler(w http.ResponseWriter, r *http.Request) {
-	//Compile templates on start
-	var tmpl = "view"
-	var templates = template.Must(template.ParseFiles("tmpl/view_sample.html"))
-	templates.ExecuteTemplate(w, tmpl+"_sample.html", nil)
+	display(w, "view_sample", nil)
 }
 
 type Data struct {
@@ -187,9 +190,7 @@ func viewHandler(w http.ResponseWriter, r *http.Request) {
 	data := new(Data)
 	data.Id = m["d"][0]
 
-	var tmpl = "view"
-	var templates = template.Must(template.ParseFiles("tmpl/view.html"))
-	templates.ExecuteTemplate(w, tmpl+".html", data)
+	display(w, "view", data)
 }
 
 /**************************************************************************************************/
