@@ -32,3 +32,5 @@ main
 # editor intellj
 .idea/
 *.iml
+
+.DS_Store
