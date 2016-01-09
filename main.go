@@ -161,7 +161,7 @@ func uploadHandler(w http.ResponseWriter, r *http.Request) {
 		}
 
 		// 生成したURLを返す
-		fmt.Fprintf(w, "http://"+URL+"/view?d="+folder)
+		fmt.Fprintf(w, "http://"+URL+"/view?id="+folder)
 
 	default:
 		w.WriteHeader(http.StatusMethodNotAllowed)
@@ -177,10 +177,6 @@ func viewSampleHandler(w http.ResponseWriter, r *http.Request) {
 	display(w, "view_sample", nil)
 }
 
-type Data struct {
-	Id string
-}
-
 /**************************************************************************************************/
 /*!
  *  モデルデータ表示
@@ -192,8 +188,8 @@ func viewHandler(w http.ResponseWriter, r *http.Request) {
 	m, _ := url.ParseQuery(r.URL.RawQuery)
 
 	// クエリパラメータを取得
-	data := new(Data)
-	data.Id = m["d"][0]
+	var data = map[string]interface{}{}
+	data["Id"] = m["id"][0]
 
 	display(w, "view", data)
 }
