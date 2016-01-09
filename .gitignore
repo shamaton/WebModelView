@@ -28,3 +28,7 @@ uploads/
 
 # exec file
 main
+
+# editor intellj
+.idea/
+*.iml
