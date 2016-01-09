@@ -178,13 +178,15 @@ func viewHandler(w http.ResponseWriter, r *http.Request) {
 	templates.ExecuteTemplate(w, tmpl+".html", data)
 }
 
-func main() {
+func init() {
 	// ランダムシード
 	rand.Seed(time.Now().UnixNano())
 
 	// uploadsフォルダがなければ作成する
 	checkFolder()
+}
 
+func main() {
 	// static file handler.
 	static := http.FileServer(http.Dir("static"))
 	uploads := http.FileServer(http.Dir("uploads"))
